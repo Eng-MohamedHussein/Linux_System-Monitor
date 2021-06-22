@@ -88,7 +88,7 @@ float LinuxParser::MemoryUtilization() {
   return FreeMemory/TotalMemory; 
 }
 
-// TODO: Read and return the system uptime
+// DONE: Read and return the system uptime
 long LinuxParser::UpTime() { 
   std::string line;
   long Uptime,idle;
@@ -118,10 +118,43 @@ long LinuxParser::IdleJiffies() { return 0; }
 vector<string> LinuxParser::CpuUtilization() { return {}; }
 
 // TODO: Read and return the total number of processes
-int LinuxParser::TotalProcesses() { return 0; }
+int LinuxParser::TotalProcesses() { 
+  std::string line,key;
+  int TotalProcesses, value;
+  std::ifstream stream(kProcDirectory+kStatFilename);
+  if(stream.is_open()){
+    while(std::getline(stream,line)){
+      std::istringstream linestream(line);
+      while (linestream>>key>>value )  
+      {
+        if(key=="processes"){
+          TotalProcesses=value;
+        }
+      }
+    }
+  }
+  return TotalProcesses;
+}
 
 // TODO: Read and return the number of running processes
-int LinuxParser::RunningProcesses() { return 0; }
+int LinuxParser::RunningProcesses() { 
+  std::string line,key;
+  int RunningProcesses, value;
+  std::ifstream stream(kProcDirectory+kStatFilename);
+  if(stream.is_open()){
+    while(std::getline(stream,line)){
+      std::istringstream linestream(line);
+      while (linestream>>key>>value )  
+      {
+        if(key=="procs_running"){
+          RunningProcesses=value;
+        }
+      }
+    }
+  }
+  return RunningProcesses;
+  
+}
 
 // TODO: Read and return the command associated with a process
 // REMOVE: [[maybe_unused]] once you define the function
