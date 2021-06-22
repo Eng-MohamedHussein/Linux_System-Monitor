@@ -1,5 +1,5 @@
-#ifndef SYSTEM_PARSER_H
-#define SYSTEM_PARSER_H
+#ifndef LINUX_PARSER_H
+#define LINUX_PARSER_H
 
 #include <fstream>
 #include <regex>
