@@ -155,8 +155,9 @@ vector<string> LinuxParser::CpuUtilization() {
     while(std::getline(stream,line)){
       std::istringstream linestream(line);
       linestream>>key;
-      if(key=="Cpu:"){
-        linestream>>key>>v[0]>>v[1]>>v[2]>>v[3]>>v[4]>>v[5]>>v[6]>>v[7]>>v[8]>>v[9];
+      if( key == "cpu"){
+        linestream>>v[0]>>v[1]>>v[2]>>v[3]>>v[4]>>v[5]>>v[6]>>v[7]>>v[8]>>v[9];
+        break;
       }
     }
   }
@@ -262,7 +263,7 @@ string LinuxParser::User(int pid) {
   std::ifstream stream(kPasswordPath);
   if(stream.is_open()){
     while(std::getline(stream,line)){
-      std::replace(line.begin(),line.end(),":"," ");
+      std::replace(line.begin(),line.end(),':',' ');
       std::istringstream linestream(line);
       linestream>>user>>x>>value;
       if(value==stoi(Uid(pid))){
