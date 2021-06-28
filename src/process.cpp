@@ -33,5 +33,5 @@ long int Process::UpTime() { return LinuxParser::UpTime(pid_); }
 // REMOVE: [[maybe_unused]] once you define the function
 bool Process::operator<(Process & a)  {
     
-    return a.Ram()< this->Ram();
+    return a.Pid() < this->Pid();
 }

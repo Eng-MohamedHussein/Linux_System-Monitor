@@ -3,6 +3,7 @@
 #include <set>
 #include <string>
 #include <vector>
+#include <algorithm>
 
 #include "process.h"
 #include "processor.h"
@@ -19,12 +20,15 @@ Processor& System::Cpu() {return cpu_; }
 
 // TODO: Return a container composed of the system's processes
 vector<Process>& System::Processes() { 
-    LinuxParser::Pids();
-    
-    for (int i : LinuxParser::Pids()){
+    //LinuxParser::Pids();
+    processes_.clear();
+    vector<int> pids=LinuxParser::Pids();
+    for (int i : pids){
         Process j(i);
         processes_.push_back(j); 
     }
+    
+    std::sort(processes_.begin(),processes_.end(), [](Process a, Process b){return a<b;});
     return processes_; 
 }
 
