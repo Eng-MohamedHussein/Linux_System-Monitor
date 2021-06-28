@@ -70,7 +70,7 @@ vector<int> LinuxParser::Pids() {
 // DONE: Read and return the system memory utilization
 float LinuxParser::MemoryUtilization() { 
   std::string key,line;
-  float value,TotalMemory,FreeMemory;
+  float value,TotalMemory,FreeMemory,UsedMemory;
   std::ifstream stream(kProcDirectory+kMeminfoFilename);
   if(stream.is_open()){
     while(std::getline(stream,line)){
@@ -85,10 +85,11 @@ float LinuxParser::MemoryUtilization() {
       }
     }
   }
-  return FreeMemory/TotalMemory; 
+  UsedMemory=TotalMemory - FreeMemory;
+  return UsedMemory/TotalMemory;
 }
 
-// DONE: Read and return the system uptime
+// DONE: Read and return the system uptime value in seconds
 long LinuxParser::UpTime() { 
   std::string line;
   long Uptime,idle;
@@ -124,23 +125,23 @@ float LinuxParser::ActiveJiffies(int pid) {
       v.push_back(value);
     }   
   }
-  long uptime= UpTime(), utime=v[10],stime=v[11],cutime=v[12],cstime=v[13],starttime=v[18];
+  long utime=v[10],stime=v[11],cutime=v[12],cstime=v[13],starttime=v[18];
   long totaltime=utime+stime+cutime+cstime;
-  long totaltime_sec=totaltime/sysconf(_SC_CLK_TCK);
-  long starttime_sec=starttime/sysconf(_SC_CLK_TCK);
-  long elapsedTime=uptime-starttime_sec;
-  float utilization= (float) totaltime_sec/elapsedTime;
+
+  long elapsed = Jiffies() - starttime;
+  float utilization= (float) totaltime/elapsed;
   return utilization;
 }
 
 // TODO: Read and return the number of active jiffies for the system
 long LinuxParser::ActiveJiffies() { 
-  long TotalJiffies;
+  long TotalJiffies,Activejiffies;
   std::vector<string> v= CpuUtilization();
   for (int i=0;i<10;++i){
     TotalJiffies += std::stol(v[i]);
   }
-  return TotalJiffies;
+  Activejiffies= TotalJiffies-IdleJiffies();
+  return Activejiffies;
 
 }
 
