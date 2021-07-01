@@ -111,8 +111,12 @@ long LinuxParser::Jiffies() {
 
 // TODO: Read and return the number of active jiffies for a PID
 // REMOVE: [[maybe_unused]] once you define the function
+//The file contains to strings at theh second and third position.
+//I'm, taking these out first at line 124 then the values will be stored in a vector.
+//the result is that the 14th element in the file is now the 10th in the vector v
 float LinuxParser::ActiveJiffies(int pid) { 
-  std::string line,temp;
+  std::string line;
+  long temp;
   long value;
   std::vector<long> v;
   std::ifstream stream(kProcDirectory+std::to_string(pid)+kStatFilename);
@@ -135,12 +139,14 @@ float LinuxParser::ActiveJiffies(int pid) {
 
 // TODO: Read and return the number of active jiffies for the system
 long LinuxParser::ActiveJiffies() { 
-  long TotalJiffies,Activejiffies;
+  long TotalJiffies=0;
+  long Activejiffies=0;
+  long Idle= IdleJiffies();
   std::vector<string> v= CpuUtilization();
   for (int i=0;i<10;++i){
     TotalJiffies += std::stol(v[i]);
   }
-  Activejiffies= TotalJiffies-IdleJiffies();
+  Activejiffies= TotalJiffies-Idle;
   return Activejiffies;
 
 }
@@ -230,7 +236,7 @@ string LinuxParser::Ram(int pid) {
     while(std::getline(stream,line)){
       std::istringstream linestream(line);
       linestream>>key;
-      if(key=="VmSize:"){
+      if(key=="VmData:"){
         linestream>>value;
       }
     }
@@ -281,6 +287,9 @@ string LinuxParser::User(int pid) {
 
 // TODO: Read and return the uptime of a process
 // REMOVE: [[maybe_unused]] once you define the function
+//The file contains to strings at theh second and third position.
+//I'm, taking these out first just before the loop.
+//the result is that the 22th element in the file is now the 19th.
 long LinuxParser::UpTime(int pid) {
   std::string line,temp;
   long value,ProcessTime;

@@ -10,42 +10,36 @@
 #include "system.h"
 #include "linux_parser.h"
 
-using std::set;
-using std::size_t;
-using std::string;
-using std::vector;
-
-// TODO: Return the system's CPU
+// Returning th Cpu Utilization of the system
 Processor& System::Cpu() {return cpu_; }
 
-// TODO: Return a container composed of the system's processes
-vector<Process>& System::Processes() { 
-    //LinuxParser::Pids();
+//Filling out the vector Processes_ with the system's processes and returing it
+std::vector<Process>& System::Processes() { 
     processes_.clear();
-    vector<int> pids=LinuxParser::Pids();
-    for (int i : pids){
-        Process j(i);
-        processes_.push_back(j);
+    std::vector<int> pids=LinuxParser::Pids();
+    for (int pid : pids){
+        
+        processes_.emplace_back(pid);
     }
-    
+
     std::sort(processes_.begin(),processes_.end(), [](Process a, Process b){return a<b;});
     return processes_; 
 }
 
-// DONE: Return the system's kernel identifier (string)
+// Returning the system's kernel identifier as string
 std::string System::Kernel() { return LinuxParser::Kernel(); }
 
-// DONE: Return the system's memory utilization
+// Returning the system's memory utilization
 float System::MemoryUtilization() { return LinuxParser::MemoryUtilization(); }
 
-// DONE: Return the operating system name
+// Returning the operating system name
 std::string System::OperatingSystem() { return LinuxParser::OperatingSystem(); }
 
-// DONE: Return the number of processes actively running on the system
+// Returning the number of processes actively running on the system
 int System::RunningProcesses() { return LinuxParser::RunningProcesses(); }
 
-// DONE: Return the total number of processes on the system
+// Returning the total number of processes on the system
 int System::TotalProcesses() { return LinuxParser::TotalProcesses(); }
 
-// DONE: Return the number of seconds since the system started running
+// Returninh the number of seconds since the system started running
 long int System::UpTime() { return LinuxParser::UpTime(); }

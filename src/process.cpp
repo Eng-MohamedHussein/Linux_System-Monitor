@@ -18,7 +18,7 @@ int Process::Pid() { return pid_; }
 float Process::CpuUtilization()  { return CpuUtilization_= LinuxParser::ActiveJiffies(pid_); }
 
 // TODO: Return the command that generated this process
-string Process::Command() { return LinuxParser::Command(pid_); }
+string Process::Command() { return LinuxParser::Command(pid_).substr(0,40); }
 
 // TODO: Return this process's memory utilization
 string Process::Ram() { return LinuxParser::Ram(pid_); }
